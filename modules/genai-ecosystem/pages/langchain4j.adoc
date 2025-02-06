@@ -40,6 +40,56 @@ An example is avalable at: https://github.com/langchain4j/langchain4j-examples/t
 include::https://github.com/langchain4j/langchain4j-examples/raw/main/neo4j-example/src/main/java/Neo4jEmbeddingStoreExample.java[]
 ----
 
+=== Usage Examples
+
+To add embeddings, execute:
+[source,java]
+----
+Embedding embedding = embeddingModel.embed("embedText").content();
+String id = embeddingStore.add(embedding);
+// output: id of the embedding
+----
+
+To add embeddings with id:
+[source,java]
+----
+String id = randomUUID();
+Embedding embedding = embeddingModel.embed("embedText").content();
+embeddingStore.add(id, embedding);
+// output: id of the embedding
+----
+
+To add embeddings with segment:
+[source,java]
+----
+TextSegment segment = TextSegment.from(randomUUID());
+Embedding embedding = embeddingModel.embed(segment.text()).content();
+String id = embeddingStore.add(embedding, segment);
+// output: id of the embedding
+----
+
+Too add embeddings with segment and metadata:
+[source,java]
+----
+TextSegment segment = TextSegment.from(randomUUID(), Metadata.from(METADATA_KEY, "test-value"));
+Embedding embedding = embeddingModel.embed(segment.text()).content();
+String id = embeddingStore.add(embedding, segment);
+// output: id of the embedding
+----
+
+Search embeddings:
+[source,java]
+----
+Embedding embedding = embeddingModel.embed("embedText").content();
+String id = embeddingStore.add(embedding);
+final EmbeddingSearchRequest request = EmbeddingSearchRequest.builder()
+        .queryEmbedding(embedding)
+        .maxResults(10)
+        .build();
+final List<EmbeddingMatch<TextSegment>> relevant = embeddingStore.search(request).matches();
+// output: list of embeddings
+----
+
 == Relevant Links
 [cols="1,4"]
 |===
