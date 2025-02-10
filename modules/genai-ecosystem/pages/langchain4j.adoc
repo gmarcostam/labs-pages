@@ -106,6 +106,20 @@ final List<EmbeddingMatch<TextSegment>> relevant = embeddingStore.search(request
 // output: list of embeddings
 ----
 
+Search embeddings with minScore:
+[source,java]
+----
+Embedding embedding = embeddingModel.embed("embedText").content();
+String id = embeddingStore.add(embedding);
+final EmbeddingSearchRequest request = EmbeddingSearchRequest.builder()
+        .queryEmbedding(embedding)
+        .maxResults(10)
+        .minScore(0.15)
+        .build();
+final List<EmbeddingMatch<TextSegment>> relevant = embeddingStore.search(request).matches();
+// output: list of embeddings
+----
+
 Search embeddings with segment with custom metadata prefix:
 [source,java]
 ----
